@@ -34,7 +34,7 @@ export default function (pi: ExtensionAPI) {
   pi.on("before_agent_start", async () => {
     if (!planMode) return;
     return {
-      systemPrompt: "你现在在plan模式。先分析并提出计划，不要执行实现；等待用户确认后再继续。",
+      systemPrompt: event.systemPrompt + \"\n\nYou are currently in plan mode. Analyze the task and propose a plan first; do not implement changes until the user confirms.\" ,
     };
   });
 
