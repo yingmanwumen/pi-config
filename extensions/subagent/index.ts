@@ -92,6 +92,14 @@ function formatToolCall(
         themeFg("muted", "edit ") + themeFg("accent", shortenPath(rawPath))
       );
     }
+    case "apply_patch": {
+      const patch = (args.patch as string) || "";
+      const match = patch.match(/\*\*\* (?:Add|Update|Delete) File: ([^\n]+)/);
+      return (
+        themeFg("muted", "apply_patch ") +
+        themeFg("accent", shortenPath(match?.[1]?.trim() || "..."))
+      );
+    }
     default: {
       const argsStr = JSON.stringify(args);
       const preview =

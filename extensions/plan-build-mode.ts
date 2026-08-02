@@ -51,7 +51,12 @@ export default function (pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
     // These tools are never exposed to the model in either mode.
     pi.setActiveTools(
-      pi.getActiveTools().filter((name) => name !== "read" && name !== "write"),
+      pi
+        .getActiveTools()
+        .filter(
+          (name) =>
+            name !== "read" && name !== "write" && name !== "edit",
+        ),
     );
     updateStatus(ctx);
   });
