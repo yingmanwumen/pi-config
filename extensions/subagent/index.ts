@@ -28,7 +28,7 @@ import {
 } from "@earendil-works/pi-coding-agent";
 import { Container, Markdown, Spacer, Text } from "@earendil-works/pi-tui";
 import { Type } from "typebox";
-import { type AgentConfig, type AgentScope, discoverAgents } from "./agents.ts";
+import { type AgentConfig, type AgentScope, discoverAgents, formatAgentList } from "./agents.ts";
 
 const MAX_PARALLEL_TASKS = 8;
 const MAX_CONCURRENCY = 4;
@@ -90,14 +90,6 @@ function formatToolCall(
       const rawPath = (args.file_path || args.path || "...") as string;
       return (
         themeFg("muted", "edit ") + themeFg("accent", shortenPath(rawPath))
-      );
-    }
-    case "apply_patch": {
-      const patch = (args.patch as string) || "";
-      const match = patch.match(/\*\*\* (?:Add|Update|Delete) File: ([^\n]+)/);
-      return (
-        themeFg("muted", "apply_patch ") +
-        themeFg("accent", shortenPath(match?.[1]?.trim() || "..."))
       );
     }
     default: {
@@ -506,6 +498,13 @@ const SubagentParams = Type.Object({
 });
 
 export default function (pi: ExtensionAPI) {
+  // Read the catalog at startup so the model sees agent names/descriptions
+  // before its first call. The catalog remains filesystem-driven.
+  const startupAgentList = formatAgentList(
+    discoverAgents(process.cwd(), "user").agents,
+    100,
+  ).text;
+
   pi.registerTool({
     name: "subagent",
     label: "Subagent",
@@ -513,6 +512,7 @@ export default function (pi: ExtensionAPI) {
       "Delegate tasks to specialized subagents with isolated context.",
       "Modes: single (agent + task), parallel (tasks array), chain (sequential with {previous} placeholder).",
       `Default agent scope is "user" (from ${path.join(getAgentDir(), "agents")}).`,
+      `Available user agents: ${startupAgentList}.`,
       `To enable project-local agents in ${CONFIG_DIR_NAME}/agents, set agentScope: "both" (or "project").`,
     ].join(" "),
     parameters: SubagentParams,
