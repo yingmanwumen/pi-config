@@ -1,16 +1,16 @@
 ---
 name: skill-creator
-description: Create or improve OpenCode agent skills with valid SKILL.md metadata, concise instructions, progressive-disclosure references, and practical validation. Use when designing, migrating, or repairing a skill for OpenCode.
+description: Create or improve Pi-compatible Agent Skills with valid SKILL.md metadata, concise instructions, progressive-disclosure references, and practical validation. Use when designing, migrating, or repairing a skill for Pi.
 license: MIT
-compatibility: opencode
+compatibility: Pi coding agent and the Agent Skills standard
 metadata:
   workflow: skill-development
   format: markdown
 ---
 
-# OpenCode Skill Creator
+# Pi Skill Creator
 
-Use this workflow when creating or updating a skill under `.opencode/skills/` or `~/.config/opencode/skills/`.
+Use this workflow when creating or updating a skill under `~/.pi/agent/skills/`, `.pi/skills/`, or another directory configured in Pi's `settings.json`.
 
 ## Skill structure
 
@@ -26,7 +26,7 @@ Use scripts or assets only when they directly support the workflow. Do not add R
 
 ## Required frontmatter
 
-OpenCode recognizes only these frontmatter fields:
+Pi requires these frontmatter fields:
 
 - `name` (required)
 - `description` (required)
@@ -71,7 +71,7 @@ Avoid duplicating the same rule in both the main file and a reference. Keep univ
 Before handoff, verify:
 
 ```bash
-skill_dir="$HOME/.config/opencode/skills/<name>"
+skill_dir="$HOME/.pi/agent/skills/<name>"
 test -f "$skill_dir/SKILL.md"
 rg -n '^name:|^description:' "$skill_dir/SKILL.md"
 rg -o 'references/[A-Za-z0-9._-]+\.md' "$skill_dir/SKILL.md"
