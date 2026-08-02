@@ -4,9 +4,6 @@ import { Key } from "@earendil-works/pi-tui";
 export default function (pi: ExtensionAPI) {
   let planMode = false;
 
-  // These tools are never exposed to the model in either mode.
-  pi.setActiveTools(pi.getActiveTools().filter((name) => name !== "read" && name !== "write"));
-
   function updateStatus(ctx: ExtensionContext) {
     ctx.ui.setStatus(
       "plan-build-mode",
@@ -16,7 +13,7 @@ export default function (pi: ExtensionAPI) {
 
   function toggle(ctx: ExtensionContext) {
     planMode = !planMode;
-    ctx.ui.notify(planMode ? "已切换到 plan 模式。" : "已切换到 build 模式。", "info");
+    ctx.ui.notify(planMode ? "Switched to plan mode。" : "Switched to build mode。", "info");
     updateStatus(ctx);
   }
 
@@ -38,5 +35,9 @@ export default function (pi: ExtensionAPI) {
     };
   });
 
-  pi.on("session_start", async (_event, ctx) => updateStatus(ctx));
+  pi.on("session_start", async (_event, ctx) => {
+    // These tools are never exposed to the model in either mode.
+    pi.setActiveTools(pi.getActiveTools().filter((name) => name !== "read" && name !== "write"));
+    updateStatus(ctx);
+  });
 }
