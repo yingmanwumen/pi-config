@@ -132,10 +132,10 @@ export function discoverAgents(
 
 export function formatAgentList(
   agents: AgentConfig[],
-  maxItems: number,
+  maxItems?: number,
 ): { text: string; remaining: number } {
   if (agents.length === 0) return { text: "none", remaining: 0 };
-  const listed = agents.slice(0, maxItems);
+  const listed = maxItems === undefined ? agents : agents.slice(0, maxItems);
   const remaining = agents.length - listed.length;
   return {
     text: listed
