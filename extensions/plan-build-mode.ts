@@ -31,10 +31,10 @@ export default function (pi: ExtensionAPI) {
   });
 
   // Plan mode only changes the instruction; it does not disable tools.
-  pi.on("before_agent_start", async () => {
+  pi.on("before_agent_start", async (event) => {
     if (!planMode) return;
     return {
-      systemPrompt: event.systemPrompt + \"\n\nYou are currently in plan mode. Analyze the task and propose a plan first; do not implement changes until the user confirms.\" ,
+      systemPrompt: event.systemPrompt + "\n\nYou are currently in plan mode. Analyze the task and propose a plan first; do not implement changes until the user confirms.",
     };
   });
 
